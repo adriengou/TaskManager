@@ -11,6 +11,6 @@ router
   .route("/:id")
   .get(tasksController.getOneTask)
   .patch(tasksController.updateTask)
-  .delete(tasksController.deleteTask);
+  .delete(tasksController.deleteTask)
 
 module.exports = router;
