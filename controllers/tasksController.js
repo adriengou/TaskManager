@@ -1,5 +1,6 @@
 const Task = require("../models/tasksModels");
 const asyncWrapper = require("../middleware/async");
+const { createCustomError } = require("../errors/customs");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 exports.getAllTasks = asyncWrapper(async (req, res) => {
@@ -24,9 +25,7 @@ exports.getOneTask = asyncWrapper(async (req, res, next) => {
   if (ObjectId.isValid(req.params.id)) {
     const task = await Task.findById(req.params.id);
     if (task === null) {
-      const err = new Error("No task found with that id");
-      err.status = 404;
-      next(err);
+      return next(createCustomError(`No task found with that id`, 404));
     } else {
       res.status(200).json({
         status: "success",
@@ -34,53 +33,34 @@ exports.getOneTask = asyncWrapper(async (req, res, next) => {
       });
     }
   } else {
-    const err = new Error("No a correct ID format");
-    err.status = 404;
-    next(err);
+    return next(createCustomError(`No a correct ID format`, 404));
   }
 });
 
-// exports.updateTask = async (req, res) => {
-//   try {
-//     const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-//       new: true,
-//       runValidators: true,
-//     });
-//     if (!task) {
-//       throw "No task found with that id";
-//     }
-//     res.status(200).json({
-//       status: "success",
-//       data: req.body,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       err,
-//     });
-//   }
-// };
-
-exports.updateTask = asyncWrapper(async (req, res) => {
-  const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  if (!task) {
-    const err = new Error("No task found with that id");
-    err.status = 404;
+exports.updateTask = asyncWrapper(async (req, res, next) => {
+  if (ObjectId.isValid(req.params.id)) {
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (task === null) {
+      return next(createCustomError(`No task found with that id`, 404));
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: req.body,
+      });
+    }
+  } else {
+    return next(createCustomError(`No a correct ID format`, 404));
   }
-  res.status(200).json({
-    status: "success",
-    data: req.body,
-  });
 });
 
-exports.deleteTask = asyncWrapper(async (req, res) => {
+exports.deleteTask = asyncWrapper(async (req, res, next) => {
   if (ObjectId.isValid(req.params.id)) {
     const task = await Task.findByIdAndDelete(req.params.id);
     if (task === null) {
-      const err = new Error("No task found with that id");
-      err.status = 404;
+      return next(createCustomError(`No task found with that id`, 404));
     } else {
       res.status(200).json({
         status: "success",
@@ -88,7 +68,6 @@ exports.deleteTask = asyncWrapper(async (req, res) => {
       });
     }
   } else {
-    const err = new Error("No a correct ID format");
-    err.status = 404;
+    return next(createCustomError(`No a correct ID format`, 404));
   }
 });
