@@ -4,7 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "dev": "parcel index.html",
+    "build": "parcel build index.html",
+    "watch": "parcel watch ./public/browser-app.js --out-dir ./public --out-file bundle.js"
   },
   "repository": {
     "type": "git",
@@ -18,12 +21,14 @@
   },
   "homepage": "https://github.com/LuigiVampa21/TaskManager#readme",
   "devDependencies": {
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
     "axios": "^0.27.2",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "helmet": "^6.0.0",
     "mongoose": "^6.5.5"
   }
 }

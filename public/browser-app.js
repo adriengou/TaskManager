@@ -1,5 +1,6 @@
-// import axios from 'axios';
+import axios, { get, post } from "axios";
 // console.log(axios);
+
 const tasksDOM = document.querySelector(".tasks");
 const loadingDOM = document.querySelector(".loading-text");
 const formDOM = document.querySelector(".task-form");
@@ -56,8 +57,9 @@ tasksDOM.addEventListener("click", async e => {
   if (el.parentElement.classList.contains("delete-btn")) {
     loadingDOM.style.visibility = "visible";
     const id = el.parentElement.dataset.id;
+    console.log(id);
     try {
-      await delete(`/api/v1/tasks/${id}`);
+      await axios.delete(`/api/v1/tasks/${id}`);
       showTasks();
     } catch (error) {
       console.log(error);
